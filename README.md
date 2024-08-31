@@ -1,2 +1,8 @@
 # data_analysis
-Repository for data analysis case studies
+Repository for practice data analysis case studies
+
+* Google Capstone Project
+* Pizza Place Case Study
+* Plane Crashes
+* Streaming Activity
+*
