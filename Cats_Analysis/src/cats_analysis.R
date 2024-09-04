@@ -25,20 +25,57 @@ cats_df <- read_csv("cats_dataset.csv")
 # verify data
 glimpse(cats_df)
 nrow(cats_df)
-n_distinct(cats_df$Breed)
-n_distinct(cats_df$`Age (Years)`)
-n_distinct(cats_df$`Weight (kg)`)
-n_distinct(cats_df$Color)
-n_distinct(cats_df$Gender)
 
+# Clean Data ##
+# clean column names#
+cats_df <- clean_names(cats_df)
 # checks: duplicates, N/A
+sum(cats_df[duplicated(cats_df),])
+sum(is.na(cats_df))
 
 
-## Clean Data ##
+n_distinct(cats_df$breed)
+#unique(cats_df$breed)  #Does not support piping
+cats_df %>%
+  group_by(breed) %>%
+  arrange(breed) %>%
+  count() %>%
+  print(n = 30)
+  
+n_distinct(cats_df$age_years)
+cats_df %>%
+  distinct(age_years) %>%
+  summarise(
+    min_age = min(age_years),
+    max_age = max(age_years),
+    avg_age = mean(age_years)
+  )
+  
+n_distinct(cats_df$weight_kg)
+cats_df %>%
+  distinct(weight_kg) %>%
+  summarise(
+    min_weight = min(weight_kg),
+    max_weight = max(weight_kg),
+    avg_weight = mean(weight_kg)
+  )
+
+n_distinct(cats_df$color)
+cats_df %>%
+  arrange(color) %>%
+  group_by(color) %>%
+  count()
+
+n_distinct(cats_df$gender)
+
+
+
+
+
 
 # remove unnecessary
 
-# clean column names
+
 
 # change formats
 
