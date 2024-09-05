@@ -68,18 +68,10 @@ cats_df %>%
 
 n_distinct(cats_df$gender)
 
-
-
-
-
-
 # remove unnecessary
-
-
-
 # change formats
-
 # export clean dataset
+
 
 ## Analysis ##
 
