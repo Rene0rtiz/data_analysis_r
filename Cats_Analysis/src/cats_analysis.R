@@ -70,11 +70,22 @@ n_distinct(cats_df$gender)
 
 # remove unnecessary
 # change formats
-# export clean dataset
+## export clean dataset ##
+# write_csv(dataframe, "~/Path/to/directory/filename.csv)
 
 
 ## Analysis ##
 
 # summary
+summary(cats_df)
+
+breed_gender_breakdown <- cats_df %>%
+  group_by(breed, gender) %>%
+  count()
 
 # visualizations
+ggplot(breed_gender_breakdown, aes( x = gender, y = n)) +
+  geom_bar(stat = "identity", width = 0.5, fill = "Steelblue") +
+  facet_wrap(~breed) +
+  geom_text(aes(label = n), vjust = -0.25) +
+  ylab("Count") 
