@@ -86,14 +86,15 @@ breed_gender_breakdown <- cats_df %>%
   count()
 
 # visualizations
-
-bgb <- ggplot(breed_gender_breakdown, aes( x = gender, y = n, fill = gender))
-
-bgb + geom_bar(stat = "identity", width = 0.5) +
-  facet_wrap(~breed) +
+# Bar plot
+breed_gender_plot <- ggplot(breed_gender_breakdown, aes( x = gender, y = n, fill = gender)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  facet_wrap(~breed)
+# Plot text and formatting
+breed_gender_plot +
   geom_text(aes(label = n), vjust = 1.15) +
   ggtitle("Cat Breed Gender Distribution") +
-  theme(plot.title = element_text(hjust = 0.5)) +
+  theme(plot.title = element_text(hjust = 0.5), axis.text = element_blank(), axis.ticks = element_blank()) +
   ylab("Count") +
   xlab("Gender")
 
