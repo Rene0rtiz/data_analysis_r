@@ -93,6 +93,7 @@ bgb + geom_bar(stat = "identity", width = 0.5) +
   facet_wrap(~breed) +
   geom_text(aes(label = n), vjust = 1.15) +
   ggtitle("Cat Breed Gender Distribution") +
+  theme(plot.title = element_text(hjust = 0.5)) +
   ylab("Count") +
   xlab("Gender")
 
