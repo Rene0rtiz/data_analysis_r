@@ -98,3 +98,13 @@ breed_gender_plot +
   ylab("Count") +
   xlab("Gender")
 
+#weight_plot <- 
+ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender)) +
+  geom_boxplot() +
+  stat_boxplot(geom = "errorbar",
+               width = 0.25) +
+  scale_fill_tron() +
+  geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.5, binwidth = 0.35) +
+  coord_flip() +
+  facet_wrap(~breed)
+  
