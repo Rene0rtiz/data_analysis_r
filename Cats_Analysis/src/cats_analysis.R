@@ -7,6 +7,7 @@ install.packages("janitor")
 install.packages("lubridate")
 install.packages("skimr")
 install.packages("tidyverse")
+install.packages("ggsci")
 
 # load packages
 library(dplyr)
@@ -17,6 +18,7 @@ library(lubridate)
 library(janitor)
 library(skimr)
 library(tidyverse)
+library(ggsci)
 
 # change working directory
 # import dataset
@@ -77,15 +79,20 @@ n_distinct(cats_df$gender)
 ## Analysis ##
 
 # summary
-summary(cats_df)
+summary(cats_df[c("age_years", "weight_kg","gender")])
 
 breed_gender_breakdown <- cats_df %>%
   group_by(breed, gender) %>%
   count()
 
 # visualizations
-ggplot(breed_gender_breakdown, aes( x = gender, y = n)) +
-  geom_bar(stat = "identity", width = 0.5, fill = "Steelblue") +
+
+bgb <- ggplot(breed_gender_breakdown, aes( x = gender, y = n, fill = gender))
+
+bgb + geom_bar(stat = "identity", width = 0.5) +
   facet_wrap(~breed) +
-  geom_text(aes(label = n), vjust = -0.25) +
-  ylab("Count") 
+  geom_text(aes(label = n), vjust = 1.15) +
+  ggtitle("Cat Breed Gender Distribution") +
+  ylab("Count") +
+  xlab("Gender")
+
