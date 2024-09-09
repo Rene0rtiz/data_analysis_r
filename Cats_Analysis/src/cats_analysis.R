@@ -31,9 +31,15 @@ nrow(cats_df)
 # Clean Data ##
 # clean column names#
 cats_df <- clean_names(cats_df)
+glimpse(cats_df)
 # checks: duplicates, N/A
 sum(cats_df[duplicated(cats_df),])
 sum(is.na(cats_df))
+
+# remove unnecessary
+# change formats
+## export clean dataset ##
+# write_csv(dataframe, "~/Path/to/directory/filename.csv)
 
 
 n_distinct(cats_df$breed)
@@ -52,15 +58,35 @@ cats_df %>%
     max_age = max(age_years),
     avg_age = mean(age_years)
   )
-  
+
+# overall cat weights   
 n_distinct(cats_df$weight_kg)
 cats_df %>%
   distinct(weight_kg) %>%
   summarise(
     min_weight = min(weight_kg),
+    min_weight_lb = format(min(weight_kg) * kg_to_lb, digits = 4),
     max_weight = max(weight_kg),
-    avg_weight = mean(weight_kg)
+    max_weight_lb = format(max(weight_kg) * kg_to_lb, digits = 4),
+    avg_weight_kg = mean(weight_kg)
   )
+
+# one kg to one lb
+kg_to_lb = 2.205
+# weight by breed
+weights_by_breed <- cats_df %>%
+  group_by(breed) %>%
+  summarise(
+    min_weight_kg = format(min(weight_kg), digits = 3),
+    min_weight_lb = format(min(weight_kg) * kg_to_lb, digits = 4),
+    max_weight_kg = format(max(weight_kg), digits = 3),
+    max_weight_lb = format(max(weight_kg) * kg_to_lb, digits = 4),
+    avg_weight_kg = format(mean(weight_kg), digits = 3),
+    avg_weight_lb = format(mean(weight_kg) * kg_to_lb, digits = 4),
+    med_weight_kg = format(median(weight_kg), digits = 3),
+    med_weight_lb = format(median(weight_kg) * kg_to_lb, digits = 4)
+  ) %>%
+  print(n = 30)
 
 n_distinct(cats_df$color)
 cats_df %>%
@@ -70,10 +96,6 @@ cats_df %>%
 
 n_distinct(cats_df$gender)
 
-# remove unnecessary
-# change formats
-## export clean dataset ##
-# write_csv(dataframe, "~/Path/to/directory/filename.csv)
 
 
 ## Analysis ##
