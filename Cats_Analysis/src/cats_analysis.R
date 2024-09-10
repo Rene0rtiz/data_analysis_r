@@ -37,7 +37,11 @@ sum(cats_df[duplicated(cats_df),])
 sum(is.na(cats_df))
 
 # remove unnecessary
-# change formats
+# Add column for weights in lbs
+cats_df <- cats_df %>%
+  mutate(weight_lb = weight_kg * 2.205)
+
+
 ## export clean dataset ##
 # write_csv(dataframe, "~/Path/to/directory/filename.csv)
 
@@ -62,31 +66,30 @@ cats_df %>%
 # overall cat weights   
 n_distinct(cats_df$weight_kg)
 cats_df %>%
-  distinct(weight_kg) %>%
+  distinct(weight_kg, weight_lb) %>%
   summarise(
     min_weight = min(weight_kg),
-    min_weight_lb = format(min(weight_kg) * kg_to_lb, digits = 4),
+    min_weight_lb2 = min(weight_lb),
     max_weight = max(weight_kg),
-    max_weight_lb = format(max(weight_kg) * kg_to_lb, digits = 4),
-    avg_weight_kg = mean(weight_kg)
+    max_weight_lb = max(weight_lb),
+    avg_weight_kg = mean(weight_kg),
+    avg_weight_lb = mean(weight_lb)
   )
 
-# one kg to one lb
-kg_to_lb = 2.205
-# weight by breed
 weights_by_breed <- cats_df %>%
   group_by(breed) %>%
   summarise(
-    min_weight_kg = format(min(weight_kg), digits = 3),
-    min_weight_lb = format(min(weight_kg) * kg_to_lb, digits = 4),
-    max_weight_kg = format(max(weight_kg), digits = 3),
-    max_weight_lb = format(max(weight_kg) * kg_to_lb, digits = 4),
-    avg_weight_kg = format(mean(weight_kg), digits = 3),
-    avg_weight_lb = format(mean(weight_kg) * kg_to_lb, digits = 4),
-    med_weight_kg = format(median(weight_kg), digits = 3),
-    med_weight_lb = format(median(weight_kg) * kg_to_lb, digits = 4)
+    min_weight_kg = min(weight_kg),
+    min_weight_lb = min(weight_lb),
+    max_weight_kg = max(weight_kg),
+    max_weight_lb = max(weight_lb),
+    avg_weight_kg = mean(weight_kg),
+    avg_weight_lb = mean(weight_lb),
+    med_weight_kg = median(weight_kg),
+    med_weight_lb = median(weight_lb)
   ) %>%
   print(n = 30)
+
 
 n_distinct(cats_df$color)
 cats_df %>%
@@ -120,13 +123,18 @@ breed_gender_plot +
   ylab("Count") +
   xlab("Gender")
 
-#weight_plot <- 
-ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender)) +
+# weight boxplot in kg
+weight_plot <- ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender)) +
   geom_boxplot() +
   stat_boxplot(geom = "errorbar",
                width = 0.25) +
   scale_fill_tron() +
-  geom_dotplot(binaxis = "y", stackdir = "center", dotsize = 0.5, binwidth = 0.35) +
   coord_flip() +
   facet_wrap(~breed)
-  
+weight_plot +
+  ggtitle("Weight By Breed") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank()) +
+  ylab("Weights (in kg)")
+
+# weight boxplot in lb
