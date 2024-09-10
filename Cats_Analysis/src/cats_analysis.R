@@ -99,8 +99,6 @@ cats_df %>%
 
 n_distinct(cats_df$gender)
 
-
-
 ## Analysis ##
 
 # summary
@@ -150,3 +148,14 @@ weight_plot_lb +
   theme(plot.title = element_text(hjust = 0.5),
         axis.title.y = element_blank()) +
   ylab("Weights (in lb)")
+
+# life longevity by breed
+breed_ages <- cats_df %>%
+  group_by(breed) %>%
+  summarise(
+    min_age = (min(age_years)),
+    max_age = (max(age_years)),
+    med_age = (median(age_years)),
+    avg_age = (mean(age_years))
+  ) %>%
+  print(n = 30)
