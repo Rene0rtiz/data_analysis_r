@@ -124,17 +124,29 @@ breed_gender_plot +
   xlab("Gender")
 
 # weight boxplot in kg
-weight_plot <- ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender)) +
+weight_plot_kg <- ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender)) +
   geom_boxplot() +
   stat_boxplot(geom = "errorbar",
                width = 0.25) +
   scale_fill_tron() +
   coord_flip() +
   facet_wrap(~breed)
-weight_plot +
+weight_plot_kg +
   ggtitle("Weight By Breed") +
   theme(plot.title = element_text(hjust = 0.5),
         axis.title.y = element_blank()) +
   ylab("Weights (in kg)")
 
 # weight boxplot in lb
+weight_plot_lb <- ggplot(cats_df, aes(x = gender, y = weight_lb, fill = gender)) +
+  geom_boxplot() +
+  stat_boxplot(geom = "errorbar",
+               width = 0.25) +
+  scale_fill_tron() +
+  coord_flip() +
+  facet_wrap(~breed)
+weight_plot_lb +
+  ggtitle("Weight By Breed") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_blank()) +
+  ylab("Weights (in lb)")
