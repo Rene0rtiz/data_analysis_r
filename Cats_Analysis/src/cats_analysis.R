@@ -129,6 +129,7 @@ weight_plot_kg <- ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender))
   scale_fill_tron() +
   coord_flip() +
   facet_wrap(~breed)
+# Plot text and formatting
 weight_plot_kg +
   ggtitle("Weight By Breed") +
   theme(plot.title = element_text(hjust = 0.5),
@@ -143,6 +144,7 @@ weight_plot_lb <- ggplot(cats_df, aes(x = gender, y = weight_lb, fill = gender))
   scale_fill_tron() +
   coord_flip() +
   facet_wrap(~breed)
+# Plot text and formatting
 weight_plot_lb +
   ggtitle("Weight By Breed") +
   theme(plot.title = element_text(hjust = 0.5),
@@ -159,3 +161,19 @@ breed_ages <- cats_df %>%
     avg_age = (mean(age_years))
   ) %>%
   print(n = 30)
+
+# ages
+age_plot <- ggplot(cats_df, aes(x = gender, y = age_years, colour = breed)) +
+  geom_point()
+# show entire data plot 
+age_plot +
+  geom_jitter() +
+  coord_flip()
+
+# Breed facets
+age_plot + 
+  geom_jitter() +
+  coord_flip() +
+  facet_wrap(~breed)
+
+
