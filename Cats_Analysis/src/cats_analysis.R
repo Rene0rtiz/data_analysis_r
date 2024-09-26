@@ -10,6 +10,7 @@ install.packages("tidyverse")
 install.packages("ggsci")
 
 # load packages
+
 library(dplyr)
 library(ggeasy)
 library(ggplot2)
@@ -33,7 +34,7 @@ nrow(cats_df)
 cats_df <- clean_names(cats_df)
 glimpse(cats_df)
 # checks: duplicates, N/A
-sum(cats_df[duplicated(cats_df),])
+sum(cats_df[duplicated(cats_df), ])
 sum(is.na(cats_df))
 
 # remove unnecessary
@@ -53,7 +54,7 @@ cats_df %>%
   arrange(breed) %>%
   count() %>%
   print(n = 30)
-  
+
 n_distinct(cats_df$age_years)
 cats_df %>%
   distinct(age_years) %>%
@@ -63,7 +64,7 @@ cats_df %>%
     avg_age = mean(age_years)
   )
 
-# overall cat weights   
+# overall cat weights
 n_distinct(cats_df$weight_kg)
 cats_df %>%
   distinct(weight_kg, weight_lb) %>%
@@ -102,7 +103,7 @@ n_distinct(cats_df$gender)
 ## Analysis ##
 
 # summary
-summary(cats_df[c("age_years", "weight_kg","gender")])
+summary(cats_df[c("age_years", "weight_kg", "gender")])
 
 breed_gender_breakdown <- cats_df %>%
   group_by(breed, gender) %>%
@@ -110,45 +111,46 @@ breed_gender_breakdown <- cats_df %>%
 
 # visualizations
 # Bar plot
-breed_gender_plot <- ggplot(breed_gender_breakdown, aes( x = gender, y = n, fill = gender)) +
+breed_gender_plot <-
+  ggplot(breed_gender_breakdown, aes(x = gender, y = n, fill = gender)) +
   geom_bar(stat = "identity", width = 0.5) +
-  facet_wrap(~breed)
+  facet_wrap( ~ breed)
 # Plot text and formatting
 breed_gender_plot +
   geom_text(aes(label = n), vjust = 1.15) +
   ggtitle("Cat Breed Gender Distribution") +
-  theme(plot.title = element_text(hjust = 0.5), axis.text = element_blank(), axis.ticks = element_blank()) +
+  theme(
+    plot.title = element_text(hjust = 0.5),
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  ) +
   ylab("Count") +
   xlab("Gender")
 
 # weight boxplot in kg
 weight_plot_kg <- ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender)) +
   geom_boxplot() +
-  stat_boxplot(geom = "errorbar",
-               width = 0.25) +
+  stat_boxplot(geom = "errorbar", width = 0.25) +
   scale_fill_tron() +
   coord_flip() +
-  facet_wrap(~breed)
+  facet_wrap( ~ breed)
 # Plot text and formatting
 weight_plot_kg +
   ggtitle("Weight By Breed") +
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.title.y = element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5), axis.title.y = element_blank()) +
   ylab("Weights (in kg)")
 
 # weight boxplot in lb
 weight_plot_lb <- ggplot(cats_df, aes(x = gender, y = weight_lb, fill = gender)) +
   geom_boxplot() +
-  stat_boxplot(geom = "errorbar",
-               width = 0.25) +
+  stat_boxplot(geom = "errorbar", width = 0.25) +
   scale_fill_tron() +
   coord_flip() +
-  facet_wrap(~breed)
+  facet_wrap( ~ breed)
 # Plot text and formatting
 weight_plot_lb +
   ggtitle("Weight By Breed") +
-  theme(plot.title = element_text(hjust = 0.5),
-        axis.title.y = element_blank()) +
+  theme(plot.title = element_text(hjust = 0.5), axis.title.y = element_blank()) +
   ylab("Weights (in lb)")
 
 # life longevity by breed
@@ -165,15 +167,13 @@ breed_ages <- cats_df %>%
 # ages
 age_plot <- ggplot(cats_df, aes(x = gender, y = age_years, colour = breed)) +
   geom_point()
-# show entire data plot 
+# show entire data plot
 age_plot +
   geom_jitter() +
   coord_flip()
 
 # Breed facets
-age_plot + 
+age_plot +
   geom_jitter() +
   coord_flip() +
-  facet_wrap(~breed)
-
-
+  facet_wrap( ~ breed)
