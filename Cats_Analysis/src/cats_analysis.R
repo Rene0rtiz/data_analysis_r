@@ -114,7 +114,7 @@ breed_gender_breakdown <- cats_df %>%
 breed_gender_plot <-
   ggplot(breed_gender_breakdown, aes(x = gender, y = n, fill = gender)) +
   geom_bar(stat = "identity", width = 0.5) +
-  facet_wrap( ~ breed)
+  facet_wrap(~ breed)
 # Plot text and formatting
 breed_gender_plot +
   geom_text(aes(label = n), vjust = 1.15) +
@@ -133,7 +133,7 @@ weight_plot_kg <- ggplot(cats_df, aes(x = gender, y = weight_kg, fill = gender))
   stat_boxplot(geom = "errorbar", width = 0.25) +
   scale_fill_tron() +
   coord_flip() +
-  facet_wrap( ~ breed)
+  facet_wrap(~ breed)
 # Plot text and formatting
 weight_plot_kg +
   ggtitle("Weight By Breed") +
@@ -146,7 +146,7 @@ weight_plot_lb <- ggplot(cats_df, aes(x = gender, y = weight_lb, fill = gender))
   stat_boxplot(geom = "errorbar", width = 0.25) +
   scale_fill_tron() +
   coord_flip() +
-  facet_wrap( ~ breed)
+  facet_wrap(~ breed)
 # Plot text and formatting
 weight_plot_lb +
   ggtitle("Weight By Breed") +
@@ -173,7 +173,3 @@ age_plot +
   coord_flip()
 
 # Breed facets
-age_plot +
-  geom_jitter() +
-  coord_flip() +
-  facet_wrap( ~ breed)
