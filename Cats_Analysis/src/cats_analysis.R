@@ -1,25 +1,11 @@
 # install packages
-install.packages("dplyr")
-install.packages("ggeasy")
-install.packages("ggplot2")
-install.packages("ggrepel")
-install.packages("janitor")
-install.packages("lubridate")
-install.packages("skimr")
-install.packages("tidyverse")
-install.packages("ggsci")
+required_packages <- c("dplyr", "ggeasy", "ggplot2", "ggrepel", "janitor", "lubridate", "skimr", "tidyverse", "waffle", "packrat")
+
+install.packages("packrat")
 
 # load packages
-
-library(dplyr)
-library(ggeasy)
-library(ggplot2)
-library(ggrepel)
-library(lubridate)
-library(janitor)
-library(skimr)
-library(tidyverse)
-library(ggsci)
+new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
+if(length(new_packages)) install.packages(new_packages)
 
 # change working directory
 # import dataset
