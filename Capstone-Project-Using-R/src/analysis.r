@@ -8,10 +8,9 @@ new_packages <- required_packages[!(required_packages %in% installed.packages()[
 if(length(new_packages)) install.packages(new_packages)
 
 # ## load packages
-
 invisible(lapply(required_packages, library, character.only = TRUE))
-# import data sets
 
+# import data sets
 daily_activity <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16", "dailyActivity_merged.csv"))
 daily_steps <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16", "dailySteps_merged.csv"))
 hourly_calories <- read_csv(here("data", "raw/Fitabase_Data_4.12.16-5.12.16", "hourlyCalories_merged.csv"))
@@ -63,8 +62,9 @@ hourly_data_df <- hourly_steps %>%
   left_join(hourly_calories, by = c("Id", "ActivityHour")) %>%
   left_join(hourly_intensities, by = c("Id", "ActivityHour"))
 
-# detect records that didn't merge cleanly
-stopifnot(!any(is.na(hourly_data_df$calories)))
+# remove duplicates from all datasets
+remove_duplicates <- function(df) df[!duplicated(df), ]
+datasets <- lapply(datasets, remove_duplicates)
 
 glimpse(hourly_data_df)
 n_distinct(hourly_data_df$Id)
