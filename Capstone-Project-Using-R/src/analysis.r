@@ -1,25 +1,15 @@
 ## install packages required for analysis
-install.packages("dplyr")
-install.packages("ggeasy")
-install.packages("ggplot2")
-install.packages("ggrepel")
-install.packages("janitor")
-install.packages("lubridate")
-install.packages("skimr")
-install.packages("tidyverse")
-install.packages("waffle")
+# create a list of packages to install for script
+required_packages <- c("dplyr", "ggeasy","ggplot2", "ggrepel", "janitor", "lubridate", "skimr", "tidyverse", "waffle")
+# create a vector of missing packages that need to be installed
+# !(required_packages %in% installed.packages()[,"Package"]): checks to see which are not already installed
+new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
+# length(new_packages): checks how many packages are missing, if > 0, then install missing packages
+if(length(new_packages)) install.packages(new_packages)
 
-## load packages
-library(dplyr)
-library(ggeasy)
-library(ggplot2)
-library(ggrepel)
-library(lubridate)
-library(janitor)
-library(skimr)
-library(tidyverse)
-library(waffle)
+# ## load packages
 
+invisible(lapply(required_packages, library, character.only = TRUE))
 # import data sets
 
 daily_activity <- read_csv("dailyActivity_merged.csv")
@@ -124,7 +114,7 @@ glimpse(hourly_data_df)
 ## export hourly data to csv
 write_csv(
   hourly_data_df,
-  "~/Code/github/Capstone-Project-Using-R/data/processed/hourly_data.csv"
+  "~/Code/github/data_analysis_r/Capstone-Project-Using-R/data/processed/hourly_data.csv"
 )
 
 ## quick summary of statistics
