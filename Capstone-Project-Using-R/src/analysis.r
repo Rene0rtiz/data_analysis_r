@@ -1,6 +1,6 @@
 ## install packages required for analysis
 # create a list of packages to install for script
-required_packages <- c("dplyr", "ggeasy","ggplot2", "ggrepel", "janitor", "lubridate", "skimr", "tidyverse", "waffle")
+required_packages <- c("dplyr", "ggeasy","ggplot2", "ggrepel", "here", "janitor", "lubridate", "skimr", "tidyverse", "waffle")
 # create a vector of missing packages that need to be installed
 # !(required_packages %in% installed.packages()[,"Package"]): checks to see which are not already installed
 new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
@@ -12,11 +12,11 @@ if(length(new_packages)) install.packages(new_packages)
 invisible(lapply(required_packages, library, character.only = TRUE))
 # import data sets
 
-daily_activity <- read_csv("dailyActivity_merged.csv")
-daily_steps <- read_csv("dailySteps_merged.csv")
-hourly_calories <- read_csv("hourlyCalories_merged.csv")
-hourly_intensities <- read_csv("hourlyIntensities_merged.csv")
-hourly_steps <- read_csv("hourlySteps_merged.csv")
+daily_activity <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16", "dailyActivity_merged.csv"))
+daily_steps <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16", "dailySteps_merged.csv"))
+hourly_calories <- read_csv(here("data", "raw/Fitabase_Data_4.12.16-5.12.16", "hourlyCalories_merged.csv"))
+hourly_intensities <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16","hourlyIntensities_merged.csv"))
+hourly_steps <- read_csv(here("data", "raw/Fitabase_Data_4.12.16-5.12.16", "hourlySteps_merged.csv"))
 
 # verify data
 glimpse(daily_activity)
@@ -58,11 +58,13 @@ names(datasets) <- c("daily_activity", "daily_steps", "hourly_calories", "hourly
 # sapply: apply a function to each dataset in the datasets list
 sapply(datasets, function(x) sum(is.na(x)))
 
-
 ## Merge all hourly into one dataset
 hourly_data_df <- hourly_steps %>%
   left_join(hourly_calories, by = c("Id", "ActivityHour")) %>%
   left_join(hourly_intensities, by = c("Id", "ActivityHour"))
+
+# detect records that didn't merge cleanly
+stopifnot(!any(is.na(hourly_data_df$calories)))
 
 glimpse(hourly_data_df)
 n_distinct(hourly_data_df$Id)
@@ -125,6 +127,7 @@ write_csv(
   hourly_data_df,
   "~/Code/github/data_analysis_r/Capstone-Project-Using-R/data/processed/hourly_data.csv"
 )
+write_csv(daily_activity, "~/Code/github/data_analysis_r/Capstone-Project-Using-R/data/processed/daily_activity.csv")
 
 ## quick summary of statistics
 summary(daily_activity)
