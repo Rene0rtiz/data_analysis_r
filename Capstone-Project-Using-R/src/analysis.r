@@ -23,6 +23,7 @@ glimpse(daily_activity)
 n_distinct(daily_activity$Id)
 nrow(daily_activity)
 
+
 glimpse(daily_steps)
 n_distinct(daily_steps$Id)
 nrow(daily_steps)
@@ -40,18 +41,23 @@ n_distinct(hourly_steps$Id)
 nrow(hourly_steps)
 
 ## check for duplicate entries
-sum(daily_activity[duplicated(daily_activity),])
-sum(daily_steps[duplicated(daily_steps),])
-sum(hourly_calories[duplicated(hourly_calories),])
-sum(hourly_intensities[duplicated(hourly_intensities),])
-sum(hourly_steps[duplicated(hourly_steps),])
+sum(duplicated(daily_activity))
+sum(duplicated(daily_steps))
+sum(duplicated(hourly_calories))
+    
+sum(duplicated(hourly_intensities))
+sum(duplicated(hourly_steps))
 
 ## check for NA
-sum(is.na(daily_activity))
-sum(is.na(daily_steps))
-sum(is.na(hourly_calories))
-sum(is.na(hourly_intensities))
-sum(is.na(hourly_steps))
+# create list of datasets
+datasets <- list(daily_activity, daily_steps, hourly_calories, hourly_intensities, hourly_steps)
+# assign names to each element in list
+# datasets$daily_activity becomes datasets[[1]]
+names(datasets) <- c("daily_activity", "daily_steps", "hourly_calories", "hourly_intensities", "hourly_steps")
+
+# sapply: apply a function to each dataset in the datasets list
+sapply(datasets, function(x) sum(is.na(x)))
+
 
 ## Merge all hourly into one dataset
 hourly_data_df <- hourly_steps %>%
