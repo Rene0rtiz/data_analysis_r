@@ -80,12 +80,15 @@ rm(daily_steps,
 daily_activity <- clean_names(daily_activity)
 hourly_data_df <- clean_names(hourly_data_df)
 
+# Check date format, sample check
+unique(substr(daily_activity$activity_date, 1, 10))
 ## Change datetime format
 daily_activity$activity_date <-
   as.POSIXct(daily_activity$activity_date,
              format = "%m/%d/%Y",
              tz = Sys.timezone())
 
+#Sys.timezone() varies by user system
 hourly_data_df$activity_hour <-
   as.POSIXct(hourly_data_df$activity_hour,
              format = "%m/%d/%Y %I:%M:%S %p",
