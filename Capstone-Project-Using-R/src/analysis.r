@@ -10,12 +10,16 @@ if(length(new_packages)) install.packages(new_packages)
 # ## load packages
 invisible(lapply(required_packages, library, character.only = TRUE))
 
+# data paths
+raw_data_dir <- here("data","raw","Fitabase_Data_4.12.16-5.12.16")
+processed_data_dir <- here("data", "processsed")
+
 # import data sets
-daily_activity <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16", "dailyActivity_merged.csv"))
-daily_steps <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16", "dailySteps_merged.csv"))
-hourly_calories <- read_csv(here("data", "raw/Fitabase_Data_4.12.16-5.12.16", "hourlyCalories_merged.csv"))
-hourly_intensities <- read_csv(here("data","raw/Fitabase_Data_4.12.16-5.12.16","hourlyIntensities_merged.csv"))
-hourly_steps <- read_csv(here("data", "raw/Fitabase_Data_4.12.16-5.12.16", "hourlySteps_merged.csv"))
+daily_activity <- read_csv(file.path(raw_data_dir, "dailyActivity_merged.csv"))
+daily_steps <- read_csv(file.path(raw_data_dir, "dailySteps_merged.csv"))
+hourly_calories <- read_csv(file.path(raw_data_dir,"hourlyCalories_merged.csv"))
+hourly_intensities <- read_csv(file.path(raw_data_dir,"hourlyIntensities_merged.csv"))
+hourly_steps <- read_csv(file.path(raw_data_dir,"hourlySteps_merged.csv"))
 
 # verify data
 glimpse(daily_activity)
