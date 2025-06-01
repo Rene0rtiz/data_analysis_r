@@ -1,25 +1,27 @@
 ## install packages required for analysis
 # create a list of packages to install for script
-required_packages <- c("dplyr", "ggeasy","ggplot2", "ggrepel", "here", "janitor", "lubridate", "skimr", "tidyverse", "waffle")
+required_packages <- c("dplyr","ggeasy","ggplot2", "ggrepel","here", "janitor", "lubridate","skimr",  "tidyverse", "waffle")
 # create a vector of missing packages that need to be installed
 # !(required_packages %in% installed.packages()[,"Package"]): checks to see which are not already installed
-new_packages <- required_packages[!(required_packages %in% installed.packages()[,"Package"])]
+new_packages <- required_packages[!(required_packages %in% installed.packages()[, "Package"])]
 # length(new_packages): checks how many packages are missing, if > 0, then install missing packages
-if(length(new_packages)) install.packages(new_packages)
+if (length(new_packages))
+  install.packages(new_packages)
 
 # ## load packages
 invisible(lapply(required_packages, library, character.only = TRUE))
 
 # data paths
-raw_data_dir <- here("data","raw","Fitabase_Data_4.12.16-5.12.16")
-processed_data_dir <- here("data", "processsed")
+raw_data_dir <- here("data", "raw", "Fitabase_Data_4.12.16-5.12.16")
+processed_data_dir <- here("data", "processed")
 
 # import data sets
 daily_activity <- read_csv(file.path(raw_data_dir, "dailyActivity_merged.csv"))
 daily_steps <- read_csv(file.path(raw_data_dir, "dailySteps_merged.csv"))
-hourly_calories <- read_csv(file.path(raw_data_dir,"hourlyCalories_merged.csv"))
-hourly_intensities <- read_csv(file.path(raw_data_dir,"hourlyIntensities_merged.csv"))
-hourly_steps <- read_csv(file.path(raw_data_dir,"hourlySteps_merged.csv"))
+hourly_calories <- read_csv(file.path(raw_data_dir, "hourlyCalories_merged.csv"))
+hourly_intensities <- read_csv(file.path(raw_data_dir, "hourlyIntensities_merged.csv"))
+hourly_steps <- read_csv(file.path(raw_data_dir, "hourlySteps_merged.csv"))
+
 
 # verify data
 glimpse(daily_activity)
@@ -47,33 +49,45 @@ nrow(hourly_steps)
 sum(duplicated(daily_activity))
 sum(duplicated(daily_steps))
 sum(duplicated(hourly_calories))
-    
+
 sum(duplicated(hourly_intensities))
 sum(duplicated(hourly_steps))
 
 ## check for NA
 # create list of datasets
-datasets <- list(daily_activity, daily_steps, hourly_calories, hourly_intensities, hourly_steps)
+datasets <- list(daily_activity,
+                 daily_steps,
+                 hourly_calories,
+                 hourly_intensities,
+                 hourly_steps)
 # assign names to each element in list
 # datasets$daily_activity becomes datasets[[1]]
-names(datasets) <- c("daily_activity", "daily_steps", "hourly_calories", "hourly_intensities", "hourly_steps")
+names(datasets) <- c(
+  "daily_activity",
+  "daily_steps",
+  "hourly_calories",
+  "hourly_intensities",
+  "hourly_steps"
+)
 
 # sapply: apply a function to each dataset in the datasets list
-sapply(datasets, function(x) sum(is.na(x)))
+sapply(datasets, function(x)
+  sum(is.na(x)))
 
 ## Merge all hourly into one dataset
 hourly_data_df <- hourly_steps %>%
   left_join(hourly_calories, by = c("Id", "ActivityHour")) %>%
   left_join(hourly_intensities, by = c("Id", "ActivityHour"))
 
-# remove duplicates from all datasets
-remove_duplicates <- function(df) df[!duplicated(df), ]
-datasets <- lapply(datasets, remove_duplicates)
+# # remove duplicates from all datasets
+# remove_duplicates <- function(df)
+#   df[!duplicated(df), ]
+# datasets <- lapply(datasets, remove_duplicates)
 
 glimpse(hourly_data_df)
 n_distinct(hourly_data_df$Id)
 nrow(hourly_data_df)
-sum(hourly_data_df[duplicated(hourly_data_df),])
+sum(duplicated(hourly_data_df))
 sum(is.na(hourly_data_df))
 
 ## Remove daily_steps and individual hourly data from environment
@@ -88,6 +102,7 @@ hourly_data_df <- clean_names(hourly_data_df)
 
 # Check date format, sample check
 unique(substr(daily_activity$activity_date, 1, 10))
+
 ## Change datetime format
 daily_activity$activity_date <-
   as.POSIXct(daily_activity$activity_date,
@@ -101,8 +116,7 @@ hourly_data_df$activity_hour <-
              tz = Sys.timezone())
 
 daily_activity$activity_date <-
-  as.Date(daily_activity$activity_date,
-          format = "%Y-%m-%d")
+  as.Date(daily_activity$activity_date, format = "%Y-%m-%d")
 
 ## separate datetime column into two
 
@@ -127,11 +141,9 @@ glimpse(daily_activity)
 glimpse(hourly_data_df)
 
 ## export hourly data to csv
-write_csv(
-  hourly_data_df,
-  "~/Code/github/data_analysis_r/Capstone-Project-Using-R/data/processed/hourly_data.csv"
-)
-write_csv(daily_activity, "~/Code/github/data_analysis_r/Capstone-Project-Using-R/data/processed/daily_activity.csv")
+write_csv(hourly_data_df, here(file.path(processed_data_dir),"hourly_data.csv"))
+
+write_csv(daily_activity, here(file.path(processed_data_dir), "daily_activity.csv"))
 
 ## quick summary of statistics
 summary(daily_activity)
@@ -148,16 +160,14 @@ ggplot(daily_activity, aes(x = day_of_week, y = total_steps)) +
   geom_bar(stat = "summary",
            fun = "mean",
            fill = "#00abff") +
-   labs(title = "Average Steps By Day Of Week",
-       x = "Day of Week", y = "Average Steps") +
+  labs(title = "Average Steps By Day Of Week", x = "Day of Week", y = "Average Steps") +
   ggeasy::easy_center_title()
 
 ## look at correlation between steps and calories
 ggplot(data = daily_activity) +
   geom_point(mapping = aes(x = total_steps, y = calories)) +
   geom_smooth(mapping = aes(x = total_steps, y = calories)) +
-  labs(title = "Correlation Between Total Steps and Calories Burned",
-       x = "Total Steps", y = "Calories Burned")
+  labs(title = "Correlation Between Total Steps and Calories Burned", x = "Total Steps", y = "Calories Burned")
 
 ## Get correlation coefficient
 cor(daily_activity$total_steps, daily_activity$calories)
@@ -166,8 +176,7 @@ cor(daily_activity$total_steps, daily_activity$calories)
 ggplot(data = daily_activity) +
   geom_point(mapping = aes(x = total_distance, y = calories)) +
   geom_smooth(mapping = aes(x = total_distance, y = calories)) +
-  labs(title = "Correlation Between Total Distance and Calories Burned",
-       x = "Distance(km)", y = "Calories Burned")
+  labs(title = "Correlation Between Total Distance and Calories Burned", x = "Distance(km)", y = "Calories Burned")
 
 ## Get correlation coefficient
 cor(daily_activity$total_distance, daily_activity$calories)
@@ -182,8 +191,10 @@ dau_breakdown <- daily_activity %>%
   mutate(
     device_usage = case_when(
       activity_date >= 1 & activity_date <= 14 ~ "Low Use - 1 to 14 days",
-      activity_date >= 15 & activity_date <= 22 ~ "Moderate Use - 15 to 22 days",
-      activity_date >= 23 & activity_date <= 31 ~ "High Use - 23 to 31 days"
+      activity_date >= 15 &
+        activity_date <= 22 ~ "Moderate Use - 15 to 22 days",
+      activity_date >= 23 &
+        activity_date <= 31 ~ "High Use - 23 to 31 days"
     )
   ) %>%
   mutate(device_usage = factor(
@@ -214,8 +225,7 @@ waffle(
   colors = c("#D55E00", "#0072B2", "#009E73"),
   legend_pos = "bottom"
 ) +
-  labs(title = "Device Usage",
-       subtitle = "1 square = 1 Participant",) +
+  labs(title = "Device Usage", subtitle = "1 square = 1 Participant", ) +
   ggeasy::easy_center_title()
 
 # get totals from daily activity for each type
