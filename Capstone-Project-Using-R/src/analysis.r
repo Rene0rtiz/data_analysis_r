@@ -22,79 +22,56 @@ hourly_calories <- read_csv(file.path(raw_data_dir, "hourlyCalories_merged.csv")
 hourly_intensities <- read_csv(file.path(raw_data_dir, "hourlyIntensities_merged.csv"))
 hourly_steps <- read_csv(file.path(raw_data_dir, "hourlySteps_merged.csv"))
 
-
-# verify data
-glimpse(daily_activity)
-n_distinct(daily_activity$Id)
-nrow(daily_activity)
-
-
-glimpse(daily_steps)
-n_distinct(daily_steps$Id)
-nrow(daily_steps)
-
-glimpse(hourly_calories)
-n_distinct(hourly_calories$Id)
-nrow(hourly_calories)
-
-glimpse(hourly_intensities)
-n_distinct(hourly_intensities$Id)
-nrow(hourly_intensities)
-
-glimpse(hourly_steps)
-n_distinct(hourly_steps$Id)
-nrow(hourly_steps)
-
-## check for duplicate entries
-sum(duplicated(daily_activity))
-sum(duplicated(daily_steps))
-sum(duplicated(hourly_calories))
-
-sum(duplicated(hourly_intensities))
-sum(duplicated(hourly_steps))
-
-## check for NA
-# create list of datasets
-datasets <- list(daily_activity,
-                 daily_steps,
-                 hourly_calories,
-                 hourly_intensities,
-                 hourly_steps)
-# assign names to each element in list
-# datasets$daily_activity becomes datasets[[1]]
-names(datasets) <- c(
-  "daily_activity",
-  "daily_steps",
-  "hourly_calories",
-  "hourly_intensities",
-  "hourly_steps"
+# create a list of datasets to apply functions to verify
+datasets <- list(
+  daily_activity = daily_activity,
+  daily_steps = daily_steps,
+  hourly_calories = hourly_calories,
+  hourly_intensities = hourly_intensities,
+  hourly_steps = hourly_steps
 )
 
-# sapply: apply a function to each dataset in the datasets list
-sapply(datasets, function(x)
-  sum(is.na(x)))
+# verify data and check for duplicates
+# create function for requently used calls
+inspect_datasets <- function(data) {
+  if (is.data.frame(data)) {
+    # Handle a single data frame
+    cat("\n--- Inspecting single dataset ---\n")
+    glimpse(data)
+    cat("Unique IDs:     ", n_distinct(data$Id), "\n")
+    cat("Rows:           ", nrow(data), "\n")
+    cat("Duplicates:     ", sum(duplicated(data)), "\n")
+    cat("Missing Values: ", sum(is.na(data)), "\n")
+  } else if (is.list(data) && all(sapply(data, is.data.frame))) {
+    # Handle a named list of data frames
+    for (name in names(data)) {
+      cat("\n---", name, "---\n")
+      glimpse(data[[name]])
+      cat("Unique IDs:     ", n_distinct(data[[name]]$Id), "\n")
+      cat("Rows:           ", nrow(data[[name]]), "\n")
+      cat("Duplicates:     ", sum(duplicated(data[[name]])), "\n")
+      cat("Missing Values: ", sum(is.na(data[[name]])), "\n")
+    }
+  } else {
+    stop("Input must be a data frame or a named list of data frames.")
+  }
+}
+
+inspect_datasets(datasets)
 
 ## Merge all hourly into one dataset
 hourly_data_df <- hourly_steps %>%
   left_join(hourly_calories, by = c("Id", "ActivityHour")) %>%
   left_join(hourly_intensities, by = c("Id", "ActivityHour"))
 
-# # remove duplicates from all datasets
-# remove_duplicates <- function(df)
-#   df[!duplicated(df), ]
-# datasets <- lapply(datasets, remove_duplicates)
-
-glimpse(hourly_data_df)
-n_distinct(hourly_data_df$Id)
-nrow(hourly_data_df)
-sum(duplicated(hourly_data_df))
-sum(is.na(hourly_data_df))
+inspect_datasets(hourly_data_df)
 
 ## Remove daily_steps and individual hourly data from environment
 rm(daily_steps,
    hourly_calories,
    hourly_intensities,
-   hourly_steps)
+   hourly_steps,
+   datasets)
 
 ## change camel case column names
 daily_activity <- clean_names(daily_activity)
