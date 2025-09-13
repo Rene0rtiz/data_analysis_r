@@ -20,8 +20,13 @@ A global chocolate company has collected sales data across multiple countries, p
 
 ## 3.Prepare
 ### **3.1 Dataset used**
+Data was aggregated from chocolate retailers and online marketplaces. Only confirmed transactions were included to ensure accuracy. Revenue values reflect final prices after applying discounts, if any.
+
 ### **3.2 Information about our dataset**
+This dataset contains detailed records of chocolate sales, including product details, sales quantities, revenue, and customer segments. It is designed for sales forecasting, trend analysis, and business intelligence, helping businesses optimize pricing strategies, inventory management, and customer targeting. 
+
 ### **3.3 Data organiztion and verifcation
+The dataset is stored in one tabular formatted .csv file. It is stored in log format and the dataset consists of the following information: Sales Person, Country, Product, Date, Amount and Boxes Shipped.
 ### **3.4 Data limitations**
 
 ## 4.Process
