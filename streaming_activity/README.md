@@ -31,13 +31,7 @@
 ## 1.Scenario
 As a junior developer on, I've been tasked wit analyzing two datasets that track music listening behavior. My role is to help prepare, clean, and explore the data so insights can be shared with the team.
 
-The two datasets are:
-* my_streaming_activity.csv - a detailed log of played songs with information such as **SongID**, **Perfomer**, **Album**, **Song**, and timestamps of when each track was played
-* Scrobble_Features.csv - a metadata file with Spotify's audio features for many of the songs (e.g. **danceability**, **energy**, **valence**, **tempo**, **popularity**, and **genre**).
-
-## 2.Ask
-
-### **2.1 Business Task**
+## **2.Ask/Business Task**
 Understand listening habits, song characteristics, and trends to make better recommendations for future playlists and optimize music discovery.
 
 ### **2.2 Main Questions**
@@ -49,9 +43,17 @@ Understand listening habits, song characteristics, and trends to make better rec
 
 
 ## 3.Prepare
-
-
 ### **3.1 Dataset used**
+* The two datasets are:
+    * my_streaming_activity.csv - a detailed log of played songs with information such as **SongID**, **Perfomer**, **Album**, **Song**, and timestamps of when each track was played
+    * Scrobble_Features.csv - a metadata file with Spotify's audio features for many of the songs (e.g. **danceability**, **energy**, **valence**, **tempo**, **popularity**, and **genre**).
+
+* Data Structure:
+    * **SongID** is the key to join both datasets
+* Data Cleaning needed:
+    * Handle missing **Album** values in streaming data
+    * Some **spotify_genre** and audio features are missing in *Scrobble_Features*
+    * Ensure timestamps are converted to **datetime**
 
 
 ### **3.2 Information about our dataset**
